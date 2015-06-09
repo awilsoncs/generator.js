@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<generator>
+    <meta>
+        <title>Basic Test</title>
+        <author>A. Wilson</author>
+        <version>1.0</version>
+    </meta>
+    <template><select name="test" /></template>
+    <set name="test">
+        <element>result</element>
+    </set>
+</generator>
