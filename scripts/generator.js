@@ -1,63 +1,25 @@
-var test = "\
-<?xml version='1.0'?>\
-<generator>\
-    <meta>\
-        <title>Basic Test</title>\
-        <author>A. Wilson</author>\
-        <version>1.0</version>\
-    </meta>\
-    <template> \
-    	<select name='test'></select> \
-    	Test \
-    	<select name='test2'/> \
-    	<dice n='1' sides='6' /> \
-    	<with var='d6'> \
-    		<select name='test2' /> \
-    		<element><var var='d6' /> <var var='d6' /></element>  \
-    	</with> \
-    	</template> \
-    <table name='test'>\
-        <element>result1</element>\
-        <element>result2</element>\
-        <element>result3</element>\
-        <element>result4</element>\
-    </table>\
-    <table name='test2'>\
-        <element>result5</element>\
-        <element>result6</element>\
-        <element>result7</element>\
-        <element>result8</element>\
-    </table>\
-</generator>"
-
-
-function evaluateGeneratorFile(generatorFile){
+function evaluateGeneratorText(generatorText){
 	//Start the generator evaluation and return the result.
 	var $generator;
 	try{
-		$generator = loadGeneratorFromFile(generatorFile);
+		$generator = loadGeneratorFromText(generatorText);
 	} catch(err) {
-		console.log("Error loading the $generator.");
+		console.log("Error loading the generator.");
 		return "Error- Generator could not be loaded."
 	}
 	$generator["imports"] = {};
 	$generator["cache"] = {};
 	return evaluate($generator, $generator);
 }
-function loadGeneratorFromFile(generatorFile){
+function loadGeneratorFromText(generatorText){
 	//Load the $generator and return the root
-	var xmlDoc = $.parseXML(generatorFile),
+	var xmlDoc = $.parseXML(generatorText),
 		$xml = $( xmlDoc ),
 		$generator = $xml.find( 'generator' );
   	return $generator;
 }
 //Language Evaluation
 function evaluate($generator, $element){
-	console.log("***********");
-	console.log("Generator: ");
-	console.log($generator);
-	console.log("Element: ");
-	console.log($element);
 	switch($element[0].nodeName.toLowerCase()){
 		case "dice": return evaluateDice($generator, $element);
 		case "element": //fall through
@@ -199,9 +161,9 @@ function weightedChoice(choices){
 }
 //Events
 function generatorButtonOnClick(){
-	$( "#generator-post" ).html( $.now() );
+	var output = evaluateGeneratorText( $( "#generator-input" )[0].value );
+	$( "#generator-post" ).html(output);
 }
-
 $( document ).ready(function(){
 	$( "#generator-button" ).click(function(){
 		generatorButtonOnClick();
